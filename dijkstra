@@ -32,3 +32,49 @@ class Map:
             self.city_list[city2][city1] = distance
             return True
         return False
+
+  def remove_road(self, city1, city2):
+        if city1 in self.city_list and city2 in self.city_list:
+            if city2 in self.city_list[city1]:
+                del self.city_list[city1][city2]
+                del self.city_list[city2][city1]
+                return True
+        return False
+
+    def dijkstra(self, source):
+    # Inisialisasi dictionary untuk menyimpan jarak terpendek dari source ke setiap simpul
+        distances = {}
+        # Iterasi melalui setiap simpul dalam city_list dan atur jarak ke tak terhingga
+        for city in self.city_list:
+            distances[city] = float('inf')
+        # Atur jarak dari source ke source sebagai 0
+        distances[source] = 0
+
+        # Inisialisasi list dari semua kota yang belum dikunjungi
+        unvisited_cities = list(self.city_list.keys())
+
+        # Selama masih ada kota yang belum dikunjungi
+        while unvisited_cities:
+            # Inisialisasi jarak minimum dan kota terdekat
+            min_distance = float('inf')
+            closest_city = None
+            # Cari kota terdekat dengan jarak terpendek dari source
+            for city in unvisited_cities:
+                if distances[city] < min_distance:
+                    min_distance = distances[city]
+                    closest_city = city
+
+            # Hapus kota terdekat dari daftar kota yang belum dikunjungi
+            unvisited_cities.remove(closest_city)
+
+            # Perbarui jarak ke setiap tetangga dari kota terdekat
+            for neighbor, weight in self.city_list[closest_city].items():
+                distance = distances[closest_city] + weight
+                if distance < distances[neighbor]:
+                    distances[neighbor] = distance
+
+        # Kembalikan dictionary yang berisi jarak terpendek dari source ke setiap simpul
+        return distances
+
+        # Dapatkan daftar semua kota dari city_list
+        cities = list(self.city_list.keys())
