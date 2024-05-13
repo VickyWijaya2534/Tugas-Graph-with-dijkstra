@@ -1,1 +1,34 @@
+import heapq
+from itertools import permutations
 
+class Map:
+    def __init__(self):
+        self.city_list = {}
+
+    def print_city(self):
+        for city in self.city_list:
+            print(city, ":", self.city_list[city])
+            for neighbor, distance in self.city_list[city].items():
+                print("    ->", neighbor, ":", distance, "KM")
+
+    def add_city(self, city):
+        if city not in self.city_list:
+            self.city_list[city] = {}
+            return True
+        return False
+
+    def remove_city(self, removed_city):
+        if removed_city in self.city_list:
+            del self.city_list[removed_city]
+            for city in self.city_list:
+                if removed_city in self.city_list[city]:
+                    del self.city_list[city][removed_city]
+            return True
+        return False
+
+    def add_road(self, city1, city2, distance):
+        if city1 in self.city_list and city2 in self.city_list:
+            self.city_list[city1][city2] = distance
+            self.city_list[city2][city1] = distance
+            return True
+        return False
