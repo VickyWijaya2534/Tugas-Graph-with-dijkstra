@@ -78,3 +78,59 @@ class Map:
 
         # Dapatkan daftar semua kota dari city_list
         cities = list(self.city_list.keys())
+
+ # Coba semua kemungkinan permutasi kota
+        for path in permutations(cities):
+            # Inisialisasi total jarak untuk setiap permutasi
+            total_distance = 0
+            # Hitung total jarak dari kota pertama ke kota terakhir dalam permutasi
+            for i in range(len(path) - 1):
+                # Periksa apakah jalur antar kota valid
+                if path[i] in self.city_list and path[i + 1] in self.city_list[path[i]]:
+                    # Tambahkan jarak antar kota ke total_distance
+                    total_distance += self.city_list[path[i]][path[i + 1]]
+                else:
+                    # Jika jalur tidak valid, atur total_distance ke tak terhingga dan keluar dari loop
+                    total_distance = float('inf')
+                    break
+            # Jika total jarak lebih pendek dari jarak terpendek yang sebelumnya ditemukan
+            if total_distance < shortest_distance:
+                # Perbarui jarak terpendek dan jalur terpendek
+                shortest_distance = total_distance
+                shortest_path = path
+
+        # Kembalikan jalur terpendek dan total jaraknya
+        return shortest_path, shortest_distance
+
+# Example usage with Dijkstra's algorithm and TSP:
+peta_Jatim = Map()
+peta_Jatim.add_city("Surabaya")
+peta_Jatim.add_city("Sidoarjo")
+peta_Jatim.add_city("Pasuruan")
+peta_Jatim.add_city("Malang")
+peta_Jatim.add_city("Blitar")
+peta_Jatim.add_city("Kediri")
+peta_Jatim.add_city("Trenggalek")
+peta_Jatim.add_city("Pacitan")
+peta_Jatim.add_city("Madiun")
+peta_Jatim.add_city("Bojonegoro")
+
+peta_Jatim.add_road("Surabaya", "Sidoarjo", 20)
+peta_Jatim.add_road("Surabaya", "Pasuruan", 40)
+peta_Jatim.add_road("Sidoarjo", "Pasuruan", 30)
+peta_Jatim.add_road("Sidoarjo", "Malang", 50)
+peta_Jatim.add_road("Pasuruan", "Malang", 60)
+peta_Jatim.add_road("Malang", "Blitar", 40)
+peta_Jatim.add_road("Malang", "Kediri", 30)
+peta_Jatim.add_road("Blitar", "Kediri", 20)
+peta_Jatim.add_road("Kediri", "Trenggalek", 40)
+peta_Jatim.add_road("Kediri", "Pacitan", 60)
+peta_Jatim.add_road("Trenggalek", "Pacitan", 50)
+peta_Jatim.add_road("Pacitan", "Madiun", 40)
+peta_Jatim.add_road("Madiun", "Bojonegoro", 50)
+
+peta_Jatim.print_city()
+shortest_distances = peta_Jatim.dijkstra("Surabaya")
+print("Shortest distances from Surabaya to other cities:")
+for city, distance in shortest_distances.items():
+    print(city, ":", distance, "KM", )
